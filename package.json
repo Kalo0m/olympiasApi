@@ -1,0 +1,39 @@
+{
+  "name": "olympiasapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2"
+  },
+  "dependencies": {
+    "apollo-server": "^2.12.0",
+    "apollo-server-express": "^2.19.0",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-graphql": "^0.9.0",
+    "graphql": "^14.6.0",
+    "node-fetch": "^2.6.0",
+    "nodemailer": "^6.4.17",
+    "nodemon": "^2.0.4",
+    "pg": "^7.18.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kalo0m/olympiasApi.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kalo0m/olympiasApi/issues"
+  },
+  "homepage": "https://github.com/Kalo0m/olympiasApi#readme"
+}
