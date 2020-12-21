@@ -1,5 +1,18 @@
+type Event {
+  id: String
+  name: String
+  description: String
+  state: Int
+  place: String
+  organizer: String
+  startDate: String
+  endDate: String
+  created_at: String
+}
+
 type Query {
   hello: String
+  getDisplayedEvent: [Event]
 }
 type Mutation {
   hello: String
