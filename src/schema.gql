@@ -9,11 +9,25 @@ type Event {
   endDate: String
   created_at: String
 }
-
+type User {
+  name: String
+}
+input EventInput {
+  id: String
+  name: String
+  description: String
+  state: Int
+  place: String
+  organizer: String
+  startDate: String
+  endDate: String
+  created_at: String
+}
 type Query {
   hello: String
   getDisplayedEvent: [Event]
 }
 type Mutation {
-  hello: String
+  login(login: String!, password: String!): User
+  saveEvents(events: [EventInput]!): Boolean
 }
