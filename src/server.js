@@ -9,9 +9,13 @@ const typeDefs = require("./schema");
 const path = require("path");
 const mail = require("./mail.js");
 const app = express();
+var dir = path.join(__dirname, "medias");
+
 app.disable("x-powered-by");
+app.use(express.static(dir));
+
 app.use(cookieParser());
-app.use(express.static("public"));
+app.use(express.static("medias"));
 app.use(
   bodyParser.urlencoded({
     extended: true,

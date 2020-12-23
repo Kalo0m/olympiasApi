@@ -1,5 +1,6 @@
 const { pool, withClient } = require("../database.js");
 const { ApolloError } = require("apollo-server");
+const { manageFile } = require("../file.js");
 module.exports = {
   login: withClient(async (_, { login, password }, { client }) => {
     console.log("login");
@@ -47,5 +48,46 @@ module.exports = {
         );
       });
     return res;
+  }),
+  addEvent: withClient(async (_, { event }, { client }) => {
+    console.log("add");
+    console.log(event);
+    try {
+      if (event.medias) {
+        const filesResolved = await event.medias;
+        const filename = await manageFile(filesResolved, client);
+        console.log("ok : " + filename);
+        await client.query(
+          "INSERT INTO EVENT (description, name, place, state, organizer, start_date, end_date, media_id) values ($1,$2,$3,$4,$5,TO_TIMESTAMP($6),TO_TIMESTAMP($7),$8)",
+          [
+            event.description,
+            event.name,
+            event.place,
+            event.state,
+            event.organizer,
+            event.startDate,
+            event.endDate,
+            filename,
+          ]
+        );
+      } else {
+        await client.query(
+          "INSERT INTO EVENT (description, name, place, state, organizer, start_date, end_date) values ($1,$2,$3,$4,$5,TO_TIMESTAMP($6),TO_TIMESTAMP($7))",
+          [
+            event.description,
+            event.name,
+            event.place,
+            event.state,
+            event.organizer,
+            event.startDate,
+            event.endDate,
+          ]
+        );
+      }
+    } catch (err) {
+      console.log(err);
+      throw new ApolloError("Erreur lors de l'ajout");
+    }
+    return true;
   }),
 };
