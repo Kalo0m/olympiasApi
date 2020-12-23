@@ -20,6 +20,8 @@ module.exports = {
   }),
   saveEvents: withClient(async (_, { events }, { client }) => {
     console.log("save");
+    console.log(events);
+    events.forEach((event) => console.log(new Date(parseInt(event.startDate))));
     const promises = events.map((event) => {
       return client.query(
         "update event set description = $1, name = $2, place = $3, state = $4, organizer = $5, start_date = TO_TIMESTAMP($6), end_date = TO_TIMESTAMP($7) where id = $8",
@@ -29,8 +31,8 @@ module.exports = {
           event.place,
           event.state,
           event.organizer,
-          event.startDate / 1000,
-          event.endDate / 1000,
+          event.startDate / 1000 + 7200,
+          event.endDate / 1000 + 7200,
           event.id,
         ]
       );
@@ -70,6 +72,7 @@ module.exports = {
             filename,
           ]
         );
+        return filename;
       } else {
         await client.query(
           "INSERT INTO EVENT (description, name, place, state, organizer, start_date, end_date) values ($1,$2,$3,$4,$5,TO_TIMESTAMP($6),TO_TIMESTAMP($7))",
