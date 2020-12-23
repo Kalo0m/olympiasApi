@@ -31,8 +31,8 @@ module.exports = {
           event.place,
           event.state,
           event.organizer,
-          event.startDate / 1000 + 7200,
-          event.endDate / 1000 + 7200,
+          event.startDate / 1000 + 3600,
+          event.endDate / 1000 + 3600,
           event.id,
         ]
       );
