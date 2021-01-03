@@ -9,6 +9,15 @@ type Event {
   endDate: String
   created_at: String
   medias: String
+  participants: [Participant]
+}
+type Participant {
+  firstname: String
+  lastname: String
+}
+input ParticipantInput {
+  firstname: String
+  lastname: String
 }
 type User {
   name: String
@@ -24,13 +33,41 @@ input EventInput {
   endDate: String
   created_at: String
   medias: Upload
+  participants: [ParticipantInput]
+}
+type Allo {
+  id: String
+  name: String
+  available: Boolean
+  description: String
+  mediaId: String
 }
 type Query {
   hello: String
   getDisplayedEvent: [Event]
+  getAllos: [Allo]
+  getAllAllos: [Allo]
+}
+input AlloInput {
+  name: String
+  description: String
+  available: Boolean
+  image: Upload
+  id: String
+  mediaId: String
+}
+input PersonInput {
+  firstname: String
+  lastname: String
+  mail: String
 }
 type Mutation {
   login(login: String!, password: String!): User
   saveEvents(events: [EventInput]!): Boolean
   addEvent(event: EventInput!): String
+  updateEvent(event: EventInput!): Boolean
+  updateAllo(allo: AlloInput): Boolean
+  createAllo(allo: AlloInput!): Boolean
+  sendMail(person: PersonInput!, eventId: String!): String
+  validateCode(codeInput: String, eventId: String!, userId: String!): Boolean
 }

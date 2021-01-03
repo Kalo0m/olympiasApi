@@ -12,9 +12,9 @@ function sendMail(options) {
       await transporter.sendMail({
         from: sender,
         to: options.email,
-        subject: "Hello ✔", // Subject line
-        text: "Hello world?", // plain text body
-        html: "<b>Hello world?</b>",
+        subject: "Inscription à un événement", // Subject line
+        text: "Votre code d'inscription : " + options.code, // plain text body
+        html: "<p>Votre code d'inscription : " + options.code + "</p>",
       });
       resolve();
     } catch (err) {

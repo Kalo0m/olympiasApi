@@ -2,6 +2,7 @@ const path = require("path");
 const fs = require("fs");
 
 async function manageFile(file, client) {
+  console.log(file);
   const ext = path.extname(file.filename);
   const {
     rows: [media],

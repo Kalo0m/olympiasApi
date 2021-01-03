@@ -1,6 +1,7 @@
 const { pool, withClient } = require("../database.js");
 const { ApolloError } = require("apollo-server");
 const { manageFile } = require("../file.js");
+const sendMail = require("../mail.js");
 module.exports = {
   login: withClient(async (_, { login, password }, { client }) => {
     console.log("login");
@@ -67,8 +68,8 @@ module.exports = {
             event.place,
             event.state,
             event.organizer,
-            event.startDate,
-            event.endDate,
+            event.startDate / 1000 + 3600,
+            event.endDate / 1000 + 3600,
             filename,
           ]
         );
@@ -93,4 +94,115 @@ module.exports = {
     }
     return true;
   }),
+  updateEvent: withClient(async (_, { event }, { client }) => {
+    try {
+      client.query(
+        "update event set description = $1, name = $2, place = $3, state = $4, organizer = $5, start_date = TO_TIMESTAMP($6), end_date = TO_TIMESTAMP($7) where id = $8",
+        [
+          event.description,
+          event.name,
+          event.place,
+          event.state,
+          event.organizer,
+          event.startDate / 1000 + 3600,
+          event.endDate / 1000 + 3600,
+          event.id,
+        ]
+      );
+    } catch (err) {
+      throw new ApolloError("mise à jour probleme");
+    }
+  }),
+  updateAllo: withClient(async (_, { allo }, { client }) => {
+    let filename = null;
+
+    console.log(allo);
+    if (allo.image) {
+      const filesResolved = await allo.image;
+      filename = await manageFile(filesResolved, client);
+    }
+    console.log(allo.available);
+    await client.query(
+      "update allo set description = $1, name = $2, available = $3, media_id = $4 where id = $5",
+      [
+        allo.description,
+        allo.name,
+        allo.available,
+        filename || allo.mediaId,
+        allo.id,
+      ]
+    );
+  }),
+  createAllo: withClient(async (_, { allo }, { client }) => {
+    let filename = null;
+
+    console.log(allo);
+    if (allo.image) {
+      const filesResolved = await allo.image;
+      filename = await manageFile(filesResolved, client);
+    }
+    console.log(allo.available);
+    console.log("coucou");
+    await client.query(
+      "insert into allo (name, description, available, media_id) values ($1, $2, $3, $4)",
+      [allo.name, allo.description, allo.available, filename]
+    );
+    console.log("coucou2");
+  }),
+
+  sendMail: withClient(async (_, { person, eventId }, { client }) => {
+    console.log(person);
+    const code = Math.floor(100000 + Math.random() * 900000);
+    console.log(code);
+    // TODO : verifier si il est pas deja inscrit à l'evenement
+    const {
+      rows: response2,
+    } = await client.query(
+      "select student.mail from student, eventuserrelation where userid = id and eventid = $1 and mail = $2",
+      [eventId, person.mail]
+    );
+
+    if (response2.length !== 0) {
+      throw new ApolloError(
+        "Cette adresse mail est déjà inscrite à cet événement",
+        "USER_ALREADY_REGISTERED"
+      );
+    }
+    sendMail({
+      email: person.mail,
+      code,
+    });
+    const {
+      rows: response,
+    } = await client.query(
+      "insert into student (mail, firstname, lastname, code) values ($1, $2, $3, $4) returning id",
+      [person.mail, person.firstname, person.lastname, code]
+    );
+    console.log("id");
+    console.log(response[0].id);
+    return response[0].id;
+  }),
+  validateCode: withClient(
+    async (_, { userId, codeInput, eventId }, { client }) => {
+      console.log(userId);
+      console.log(codeInput);
+      const {
+        rows: response,
+      } = await client.query(
+        "select code from student where id = $1 and code = $2",
+        [userId, codeInput]
+      );
+      if (!response || response.length === 0)
+        throw new ApolloError(
+          "le code entré n'est pas le bon",
+          "INVALIDATE_CODE"
+        );
+
+      await client.query(
+        "insert into eventuserrelation (userid, eventid) values ($1, $2)",
+        [userId, eventId]
+      );
+      client.query("update student set validate = true");
+    }
+  ),
 };
