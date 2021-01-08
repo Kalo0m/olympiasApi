@@ -21,7 +21,6 @@ module.exports = {
     });
     response = await Promise.all(response);
     console.log(response);
-    console.log({ ok: response[0].startDate });
     return response;
   }),
   getAllos: withClient(async (_, __, { client }) => {

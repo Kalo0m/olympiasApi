@@ -67,7 +67,7 @@ type Mutation {
   addEvent(event: EventInput!): String
   updateEvent(event: EventInput!): Boolean
   updateAllo(allo: AlloInput): Boolean
-  createAllo(allo: AlloInput!): Boolean
+  createAllo(allo: AlloInput!): String
   sendMail(person: PersonInput!, eventId: String!): String
   validateCode(codeInput: String, eventId: String!, userId: String!): Boolean
 }

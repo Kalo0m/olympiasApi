@@ -148,6 +148,7 @@ module.exports = {
       [allo.name, allo.description, allo.available, filename]
     );
     console.log("coucou2");
+    return filename;
   }),
 
   sendMail: withClient(async (_, { person, eventId }, { client }) => {
