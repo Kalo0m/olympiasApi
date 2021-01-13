@@ -41,6 +41,7 @@ type Allo {
   available: Boolean
   description: String
   mediaId: String
+  phone: String
 }
 type Query {
   hello: String
