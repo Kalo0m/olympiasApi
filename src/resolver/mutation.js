@@ -181,7 +181,9 @@ module.exports = {
     }
     sendMail({
       email: person.mail,
-      code,
+      message:
+        "Voici votre code de confirmation. Entrez le sur le site pour valider votre inscription <br> <br> Code : " +
+        code,
     });
     const {
       rows: response,
@@ -227,10 +229,11 @@ module.exports = {
       );
       console.log(response);
       await client.query(
-        "insert into commande (firstname, lastname, place, allo_id, option_id) values($1, $2, $3, $4, $5)",
+        "insert into commande (firstname, lastname, mail, place, allo_id, option_id) values($1, $2, $3, $4, $5, $6)",
         [
           command.person.firstname,
           command.person.lastname,
+          command.person.mail,
           command.person.place,
           command.allo.id,
           response[0].id,
@@ -238,20 +241,42 @@ module.exports = {
       );
     } else {
       await client.query(
-        "insert into commande (firstname, lastname, place, allo_id) values($1, $2, $3, $4)",
+        "insert into commande (firstname, lastname, mail, place, allo_id) values($1, $2, $3, $4, $5)",
         [
           command.person.firstname,
           command.person.lastname,
+          command.person.mail,
           command.person.place,
           command.allo.id,
         ]
       );
     }
+    sendMail({
+      email: "theo.letouze44@gmail.com",
+      message:
+        "Une nouvelle commande vient d'arriver ! <br> Lieu : " +
+        command.person.place +
+        "<br>Commande : " +
+        command.allo.name +
+        "<br>" +
+        "options : " +
+        command.person.option,
+    });
   }),
   setLivre: withClient(async (_, { commandId }, { client }) => {
     console.log(commandId);
-    await client.query("update commande set status = 1 where id = $1", [
+    await client.query("update commande set status = 2 where id = $1", [
       commandId,
+    ]);
+  }),
+  sendMailCommand: withClient(async (_, { command }, { client }) => {
+    sendMail({
+      email: command.mail,
+      message:
+        "Votre commande à Olympi'As ne va pas tarder à arriver ! <br> <br> L'équipe d'Olympi'As",
+    });
+    await client.query("update commande set status = 1 where id = $1", [
+      command.id,
     ]);
   }),
 };

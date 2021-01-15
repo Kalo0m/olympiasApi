@@ -60,6 +60,7 @@ type Commande {
   id: String
   firstname: String
   lastname: String
+  mail: String
   place: String
   allo: Allo
   status: Int
@@ -70,6 +71,17 @@ input OptionInput {
   name: String
   id: String
   allo_id: String
+}
+input CommandeInput2 {
+  id: String
+  firstname: String
+  lastname: String
+  mail: String
+  place: String
+  allo: AlloInput
+  status: Int
+  option: String
+  createdAt: String
 }
 input AlloInput {
   name: String
@@ -113,4 +125,5 @@ type Mutation {
   validateCode(codeInput: String, eventId: String!, userId: String!): Boolean
   commander(command: CommandeInput): Boolean
   setLivre(commandId: String): Boolean
+  sendMailCommand(command: CommandeInput2): Boolean
 }

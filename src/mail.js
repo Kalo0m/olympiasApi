@@ -13,8 +13,8 @@ function sendMail(options) {
         from: sender,
         to: options.email,
         subject: "Inscription à un événement", // Subject line
-        text: "Votre code d'inscription : " + options.code, // plain text body
-        html: "<p>Votre code d'inscription : " + options.code + "</p>",
+        text: options.message, // plain text body
+        html: "<p>" + options.message + "</p>",
       });
       resolve();
     } catch (err) {
