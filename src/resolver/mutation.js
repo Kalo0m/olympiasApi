@@ -132,6 +132,16 @@ module.exports = {
         allo.id,
       ]
     );
+    client.query(`Delete from option where allo_id = $1`, [allo.id]);
+    const promises = allo.options.map((o) => {
+      return client.query(
+        `INSERT INTO option (name, allo_id) 
+          VALUES ($1, $2)
+          ON CONFLICT (name, allo_id) DO UPDATE 
+          SET name = $1;`,
+        [o, allo.id]
+      );
+    });
   }),
   createAllo: withClient(async (_, { allo }, { client }) => {
     let filename = null;
@@ -206,4 +216,36 @@ module.exports = {
       client.query("update student set validate = true");
     }
   ),
+  commander: withClient(async (_, { command }, { client }) => {
+    console.log(command.person.option);
+    if (command.person.option != null) {
+      const {
+        rows: response,
+      } = await client.query(
+        "select id from option where allo_id = $1 and name = $2",
+        [command.allo.id, command.person.option]
+      );
+      console.log(response);
+      await client.query(
+        "insert into commande (firstname, lastname, place, allo_id, option_id) values($1, $2, $3, $4, $5)",
+        [
+          command.person.firstname,
+          command.person.lastname,
+          command.person.place,
+          command.allo.id,
+          response[0].id,
+        ]
+      );
+    } else {
+      await client.query(
+        "insert into commande (firstname, lastname, place, allo_id) values($1, $2, $3, $4)",
+        [
+          command.person.firstname,
+          command.person.lastname,
+          command.person.place,
+          command.allo.id,
+        ]
+      );
+    }
+  }),
 };

@@ -42,12 +42,33 @@ type Allo {
   description: String
   mediaId: String
   phone: String
+  options: [Option]
+}
+type Option {
+  name: String
+  id: String
+  allo_id: String
 }
 type Query {
   hello: String
   getDisplayedEvent: [Event]
   getAllos: [Allo]
   getAllAllos: [Allo]
+  getCommandes: [Commande]
+}
+type Commande {
+  firstname: String
+  lastname: String
+  place: String
+  allo: Allo
+  status: Int
+  option: String
+  createdAt: String
+}
+input OptionInput {
+  name: String
+  id: String
+  allo_id: String
 }
 input AlloInput {
   name: String
@@ -57,11 +78,28 @@ input AlloInput {
   id: String
   mediaId: String
   phone: String
+  options: [String]
+}
+input AlloInput2 {
+  name: String
+  description: String
+  available: Boolean
+  image: Upload
+  id: String
+  mediaId: String
+  phone: String
+  options: [OptionInput]
+}
+input CommandeInput {
+  allo: AlloInput2
+  person: PersonInput
 }
 input PersonInput {
   firstname: String
   lastname: String
   mail: String
+  place: String
+  option: String
 }
 type Mutation {
   login(login: String!, password: String!): User
@@ -72,4 +110,5 @@ type Mutation {
   createAllo(allo: AlloInput!): String
   sendMail(person: PersonInput!, eventId: String!): String
   validateCode(codeInput: String, eventId: String!, userId: String!): Boolean
+  commander(command: CommandeInput): Boolean
 }

@@ -27,15 +27,66 @@ module.exports = {
     const { rows: allos } = await client.query(
       'SELECT *, media_id as "mediaId" from allo where available = true'
     );
+    const promises = allos.map(async (a) => {
+      const {
+        rows: allos,
+      } = await client.query("SELECT * from option where allo_id = $1", [a.id]);
+      console.log(a);
+      return {
+        ...a,
+        options: allos,
+      };
+    });
     console.log(allos);
-    return allos;
+    const allosRes = await Promise.all(promises);
+    console.log(allosRes);
+    return allosRes;
   }),
   getAllAllos: withClient(async (_, __, { client }) => {
     const { rows: allos } = await client.query(
       'SELECT *, media_id as "mediaId" from allo'
     );
-
+    const promises = allos.map(async (a) => {
+      const {
+        rows: allos,
+      } = await client.query("SELECT * from option where allo_id = $1", [a.id]);
+      console.log(a);
+      return {
+        ...a,
+        options: allos,
+      };
+    });
     console.log(allos);
-    return allos;
+    const allosRes = await Promise.all(promises);
+    console.log(allosRes);
+    return allosRes;
+  }),
+  getCommandes: withClient(async (_, __, { client }) => {
+    const { rows: commandes } = await client.query(
+      'SELECT *, allo_id as "alloId", created_at as "createdAt" from commande'
+    );
+    const promises = commandes.map(async (c) => {
+      const {
+        rows: allos,
+      } = await client.query(
+        'SELECT *, media_id as "mediaId" from allo where id = $1',
+        [c.alloId]
+      );
+      console.log(c);
+      const {
+        rows: option,
+      } = await client.query("SELECT * from option where id = $1", [
+        c.option_id,
+      ]);
+      console.log(option);
+      return {
+        ...c,
+        option: option.length !== 0 ? option[0].name : null,
+        allo: allos[0],
+      };
+    });
+    const commandesRes = await Promise.all(promises);
+    console.log(commandesRes);
+    return commandesRes;
   }),
 };
