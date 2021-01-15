@@ -248,4 +248,10 @@ module.exports = {
       );
     }
   }),
+  setLivre: withClient(async (_, { commandId }, { client }) => {
+    console.log(commandId);
+    await client.query("update commande set status = 1 where id = $1", [
+      commandId,
+    ]);
+  }),
 };

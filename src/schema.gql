@@ -57,6 +57,7 @@ type Query {
   getCommandes: [Commande]
 }
 type Commande {
+  id: String
   firstname: String
   lastname: String
   place: String
@@ -111,4 +112,5 @@ type Mutation {
   sendMail(person: PersonInput!, eventId: String!): String
   validateCode(codeInput: String, eventId: String!, userId: String!): Boolean
   commander(command: CommandeInput): Boolean
+  setLivre(commandId: String): Boolean
 }
