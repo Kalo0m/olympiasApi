@@ -252,7 +252,7 @@ module.exports = {
       );
     }
     sendMail({
-      email: "hugolazare9@gmail.com",
+      email: "olympiasimt@gmail.com",
       message:
         "Une nouvelle commande vient d'arriver ! <br> Lieu : " +
         command.person.place +
