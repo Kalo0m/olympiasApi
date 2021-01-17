@@ -75,7 +75,7 @@ input OptionInput {
 input CommandeInput2 {
   id: String
   firstname: String
-  lastname: String
+  quantite: String
   mail: String
   place: String
   allo: AlloInput
