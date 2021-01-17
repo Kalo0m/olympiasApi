@@ -229,10 +229,10 @@ module.exports = {
       );
       console.log(response);
       await client.query(
-        "insert into commande (firstname, lastname, mail, place, allo_id, option_id) values($1, $2, $3, $4, $5, $6)",
+        "insert into commande (firstname, quantite, mail, place, allo_id, option_id) values($1, $2, $3, $4, $5, $6)",
         [
           command.person.firstname,
-          command.person.lastname,
+          command.person.quantite,
           command.person.mail,
           command.person.place,
           command.allo.id,
@@ -241,10 +241,10 @@ module.exports = {
       );
     } else {
       await client.query(
-        "insert into commande (firstname, lastname, mail, place, allo_id) values($1, $2, $3, $4, $5)",
+        "insert into commande (firstname, quantite, mail, place, allo_id) values($1, $2, $3, $4, $5)",
         [
           command.person.firstname,
-          command.person.lastname,
+          command.person.quantite,
           command.person.mail,
           command.person.place,
           command.allo.id,

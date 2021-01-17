@@ -59,7 +59,7 @@ type Query {
 type Commande {
   id: String
   firstname: String
-  lastname: String
+  quantite: String
   mail: String
   place: String
   allo: Allo
@@ -109,7 +109,7 @@ input CommandeInput {
 }
 input PersonInput {
   firstname: String
-  lastname: String
+  quantite: String
   mail: String
   place: String
   option: String
