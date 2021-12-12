@@ -91,7 +91,7 @@ input AlloInput {
   id: String
   mediaId: String
   phone: String
-  options: [String]
+  options: [OptionInput]
 }
 input AlloInput2 {
   name: String

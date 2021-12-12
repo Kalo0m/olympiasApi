@@ -5,14 +5,14 @@ const transporter = nodeMailer.createTransport(smtpUri);
 
 function sendMail(options) {
   return new Promise(async (resolve, reject) => {
-    const sender = "olympiasImt@gmail.com";
+    const sender = "reptilimt@gmail.com";
     console.log(smtpUri);
     try {
       console.log(options);
       await transporter.sendMail({
         from: sender,
         to: options.email,
-        subject: "Inscription à un événement", // Subject line
+        subject: "Inscription", // Subject line
         text: options.message, // plain text body
         html: "<p>" + options.message + "</p>",
       });

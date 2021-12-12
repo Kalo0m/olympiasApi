@@ -1,3 +1,4 @@
+
 const { pool, withClient } = require("../database.js");
 const { ApolloError } = require("apollo-server");
 const { manageFile } = require("../file.js");
@@ -132,17 +133,23 @@ module.exports = {
         allo.id,
       ]
     );
-    client.query(`Delete from option where allo_id = $1`, [allo.id]);
     const promises = allo.options.map((o) => {
-      return client.query(
-        `INSERT INTO option (name, allo_id) 
-          VALUES ($1, $2)
-          ON CONFLICT (name, allo_id) DO UPDATE 
-          SET name = $1;`,
-        [o, allo.id]
-      );
-    });
-  }),
+console.log(o.id)  	
+if (o.id) {
+        return client.query(`UPDATE option SET name = $1 WHERE id = $2 `,
+          [o.name, o.id],
+        );
+      } else {
+        return client.query(`INSERT INTO option (name, allo_id) values ($1, $2) ON CONFLICT (name, allo_id) DO UPDATE SET name = $1`, [
+          o.name,
+          allo.id,
+        ]);
+      }
+    
+	  });
+    await Promise.all(promises);
+  
+}),
   createAllo: withClient(async (_, { allo }, { client }) => {
     let filename = null;
 
@@ -252,7 +259,7 @@ module.exports = {
       );
     }
     sendMail({
-      email: "olympiasimt@gmail.com",
+      email: "reptilimt@gmail.com",
       message:
         "Une nouvelle commande vient d'arriver ! <br> Lieu : " +
         command.person.place +
@@ -273,7 +280,7 @@ module.exports = {
     sendMail({
       email: command.mail,
       message:
-        "Votre commande à Olympi'As ne va pas tarder à arriver ! <br> <br> L'équipe d'Olympi'As",
+        "Votre commande ne va pas tarder à arriver ! <br> <br> L'équipe Reptili'imt",
     });
     await client.query("update commande set status = 1 where id = $1", [
       command.id,
