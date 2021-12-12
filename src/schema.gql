@@ -61,6 +61,7 @@ type Commande {
   firstname: String
   quantite: String
   mail: String
+  phone: String
   place: String
   allo: Allo
   status: Int
@@ -77,6 +78,7 @@ input CommandeInput2 {
   firstname: String
   quantite: String
   mail: String
+  phone: String
   place: String
   allo: AlloInput
   status: Int
@@ -111,6 +113,7 @@ input PersonInput {
   firstname: String
   quantite: String
   mail: String
+  phone: String
   place: String
   option: String
 }
